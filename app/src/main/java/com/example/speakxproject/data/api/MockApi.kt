@@ -30,13 +30,11 @@ class MockApi {
         )
     }
 
-    private fun generateUpwardItems(id: Int?): List<Item> {
-        val startId = id ?: 100
-        return List(10) { Item(id = startId - it, title = "Item ${startId - it}") }
+    private fun generateUpwardItems(id: Int): List<Item> {
+        return List(10) { Item(id = id - it, title = "Item ${id - it}") }
     }
 
-    private fun generateDownwardItems(id: Int?): List<Item> {
-        val startId = id ?: 1000
-        return List(10) { Item(id = startId + it, title = "Item ${startId + it}") }
+    private fun generateDownwardItems(id: Int): List<Item> {
+        return List(10) { Item(id = id + it, title = "Item ${id + it}") }
     }
 }

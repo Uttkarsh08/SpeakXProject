@@ -1,4 +1,3 @@
-import android.text.Layout
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -77,12 +76,12 @@ fun ListScreen(modifier: Modifier = Modifier , viewModel: ListViewModel) {
                         items.apply {
                             when {
                                 loadState.append is LoadState.Loading -> {
-                                    items(10) {
+                                    items(1) {
                                         ShimmerEffect()
                                     }
                                 }
                                 loadState.refresh is LoadState.Loading -> {
-                                    items(10) {
+                                    items(1) {
                                         ShimmerEffect()
                                     }
                                 }

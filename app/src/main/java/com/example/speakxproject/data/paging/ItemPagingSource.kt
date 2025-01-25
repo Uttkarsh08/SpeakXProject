@@ -15,7 +15,7 @@ class ItemPagingSource(
 
         return try {
 
-            val id = params.key?: 0
+            val id = params.key?: 100
             val direction = if(params.loadSize > 0) "down" else "up"
 
             val response: ApiResponse = api.fetchItems(id, direction)
