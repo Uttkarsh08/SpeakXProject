@@ -3,7 +3,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.example.speakxproject.domain.repository.ItemRepository
 import com.example.speakxproject.util.ItemState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
