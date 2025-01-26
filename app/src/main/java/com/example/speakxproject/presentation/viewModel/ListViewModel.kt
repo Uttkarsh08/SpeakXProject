@@ -18,8 +18,8 @@ class ListViewModel(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
-//    private val _hasMore = MutableStateFlow(true)
-//    val hasMore = _hasMore.asStateFlow()
+    val hasMore = repository.gethasMore()
+    val searchHasMore = repository.getSearchHasMore()
 
 
     init{
@@ -52,6 +52,7 @@ class ListViewModel(
         _searchQuery.value = query
         searchItems(query)
     }
+
 
 
 }

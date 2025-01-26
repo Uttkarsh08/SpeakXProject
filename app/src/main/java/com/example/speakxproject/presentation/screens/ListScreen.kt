@@ -1,3 +1,5 @@
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -6,7 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -28,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -53,7 +59,8 @@ import com.example.speakxproject.util.ItemState
 fun ListScreen(modifier: Modifier = Modifier , viewModel: ListViewModel) {
 
     val itemState = viewModel.itemState.collectAsState()
-//    val searchState by viewModel.searchState.collectAsState()
+    val hasMore by viewModel.hasMore.collectAsState()
+    val searchHasMore by viewModel.searchHasMore.collectAsState()
 
     Scaffold(
         topBar = { TopBar() },
@@ -74,6 +81,18 @@ fun ListScreen(modifier: Modifier = Modifier , viewModel: ListViewModel) {
                     viewModel.updateSearchQuery(query)
                 }
             )
+            if (!searchHasMore) {
+                Text(
+                    text = "Please Search Between 1-2000",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(32.dp)
+                        .wrapContentHeight(Alignment.Top)
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                )
+            }
 
             when(itemState.value){
                 is ItemState.Error -> {
@@ -103,7 +122,9 @@ fun ListScreen(modifier: Modifier = Modifier , viewModel: ListViewModel) {
                                 Item(item)
                             }
 
+
                         }
+
 
                         items.apply {
                             when {
@@ -117,8 +138,22 @@ fun ListScreen(modifier: Modifier = Modifier , viewModel: ListViewModel) {
                                         ShimmerEffect()
                                     }
                                 }
+                                loadState.append is LoadState.NotLoading && !hasMore -> {
+                                    items(1) {
+                                        Text(
+                                            text = "No more items available",
+                                            color = MaterialTheme.colorScheme.error,
+                                            style = MaterialTheme.typography.titleLarge,
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(16.dp),
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                }
                             }
                         }
+
 
                     }
                 }
@@ -183,9 +218,6 @@ fun Item(data: Item){
             }
 
         }
-
-
-//        HorizontalDivider(color = MaterialTheme.colorScheme.secondary, thickness = 2.dp)
 
 
     }

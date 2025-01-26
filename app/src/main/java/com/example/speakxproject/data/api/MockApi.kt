@@ -6,7 +6,8 @@ import kotlinx.coroutines.delay
 
 class MockApi {
 
-    private val MAX_ID = 2000
+    private val MAX_ID = 50
+
     suspend fun fetchItems(id: Int): ApiResponse{
         delay(1200)
 
@@ -33,9 +34,9 @@ class MockApi {
 
         val items = filteredItems.filter { it.id> id }.take(10)
 
-        val hasMore = items.isNotEmpty()
+        val searchHasMore = filteredItems.isNotEmpty() && items.last().id <= MAX_ID
 
-        return ApiResponse(items, hasMore)
+        return ApiResponse(items, searchHasMore)
     }
 
 }
