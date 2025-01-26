@@ -6,13 +6,11 @@ import kotlinx.coroutines.delay
 
 class MockApi {
 
-    private val MAX_ID = 50
+    private val MAX_ID = 1000
 
-    suspend fun fetchItems(id: Int): ApiResponse{
+    suspend fun fetchItems(id: Int): ApiResponse {
         delay(1200)
-
         val items = generateItems(id)
-
         val hasMore = items.isNotEmpty() && items.last().id < MAX_ID
 
         return ApiResponse(
@@ -32,9 +30,9 @@ class MockApi {
         val all = (1..MAX_ID).map { Item(it, "Item $it") }
         val filteredItems = all.filter { it.title.contains(query, ignoreCase = true) }
 
-        val items = filteredItems.filter { it.id> id }.take(10)
+        val items = filteredItems.filter { it.id > id }.take(10)
 
-        val searchHasMore = filteredItems.isNotEmpty() && items.last().id <= MAX_ID
+        val searchHasMore = filteredItems.isNotEmpty() && filteredItems.last().id <= MAX_ID
 
         return ApiResponse(items, searchHasMore)
     }

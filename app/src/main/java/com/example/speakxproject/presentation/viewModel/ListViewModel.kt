@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ListViewModel(
-    private val repository: ItemRepository
+    private val repository: ItemRepository,
 ) : ViewModel() {
 
     private val _itemsState = MutableStateFlow<ItemState>(ItemState.Loading())
@@ -22,12 +22,12 @@ class ListViewModel(
     val searchHasMore = repository.getSearchHasMore()
 
 
-    init{
+    init {
 
         fetchData()
     }
 
-    private fun fetchData(){
+    private fun fetchData() {
         viewModelScope.launch {
             val data = repository.getItemsPager().flow.cachedIn(viewModelScope)
             _itemsState.value = ItemState.Success(data)
@@ -37,22 +37,23 @@ class ListViewModel(
     private fun searchItems(query: String) {
         if (query.isEmpty()) {
             fetchData()
+            _searchQuery.value = ""
+        }else{
+            _itemsState.value = ItemState.Searching
+
+            viewModelScope.launch {
+                val data = repository.searchItems(searchQuery.value).flow.cachedIn(viewModelScope)
+                _itemsState.value = ItemState.Success(data)
+
+            }
         }
 
-        _itemsState.value = ItemState.Searching
 
-        viewModelScope.launch {
-            val data = repository.searchItems(searchQuery.value).flow.cachedIn(viewModelScope)
-            _itemsState.value = ItemState.Success(data)
-
-        }
     }
 
     fun updateSearchQuery(query: String) {
         _searchQuery.value = query
         searchItems(query)
     }
-
-
 
 }

@@ -1,5 +1,6 @@
 package com.example.speakxproject.data.paging
 
+
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.speakxproject.data.api.MockApi
@@ -9,14 +10,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class SearchItemPagingSource(
     private val mockApi: MockApi,
     private val query: String,
-    private val _SearchhasMore: MutableStateFlow<Boolean>
+    private val _SearchhasMore: MutableStateFlow<Boolean>,
 ) : PagingSource<Int, Item>() {
 
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Item> {
         return try {
-            val id = params.key ?: 1
 
+            val id = params.key ?: 1
             val response = mockApi.searchItems(id, query)
             val items = response.data
             val searchHasMore = response.hasMore
@@ -36,7 +37,6 @@ class SearchItemPagingSource(
             } else {
                 null
             }
-
 
             LoadResult.Page(
                 data = items,

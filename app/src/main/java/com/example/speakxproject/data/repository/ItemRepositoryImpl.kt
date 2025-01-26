@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 
-class ItemRepositoryImpl(private  val api: MockApi): ItemRepository {
+class ItemRepositoryImpl(private val api: MockApi) : ItemRepository {
 
     private val _hasMore = MutableStateFlow(true)
     private val _SearchhasMore = MutableStateFlow(true)
@@ -37,6 +37,7 @@ class ItemRepositoryImpl(private  val api: MockApi): ItemRepository {
     override fun gethasMore(): StateFlow<Boolean> {
         return _hasMore
     }
+
     override fun getSearchHasMore(): StateFlow<Boolean> {
         return _SearchhasMore
     }
