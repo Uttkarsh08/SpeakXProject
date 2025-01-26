@@ -4,6 +4,7 @@ import androidx.paging.cachedIn
 import com.example.speakxproject.domain.repository.ItemRepository
 import com.example.speakxproject.util.ItemState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -13,6 +14,13 @@ class ListViewModel(
 
     private val _itemsState = MutableStateFlow<ItemState>(ItemState.Loading())
     val itemState = _itemsState.asStateFlow()
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery = _searchQuery.asStateFlow()
+
+//    private val _hasMore = MutableStateFlow(true)
+//    val hasMore = _hasMore.asStateFlow()
+
 
     init{
 
@@ -25,4 +33,25 @@ class ListViewModel(
             _itemsState.value = ItemState.Success(data)
         }
     }
+
+    private fun searchItems(query: String) {
+        if (query.isEmpty()) {
+            fetchData()
+        }
+
+        _itemsState.value = ItemState.Searching
+
+        viewModelScope.launch {
+            val data = repository.searchItems(searchQuery.value).flow.cachedIn(viewModelScope)
+            _itemsState.value = ItemState.Success(data)
+
+        }
+    }
+
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
+        searchItems(query)
+    }
+
+
 }

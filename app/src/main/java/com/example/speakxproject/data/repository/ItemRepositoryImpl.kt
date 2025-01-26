@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.example.speakxproject.data.api.MockApi
 import com.example.speakxproject.data.model.Item
+import com.example.speakxproject.data.paging.SearchItemPagingSource
 import com.example.speakxproject.domain.repository.ItemRepository
 import com.example.twowaypagination.data.paging.ItemPagingSource
 
@@ -15,6 +16,13 @@ class ItemRepositoryImpl(private  val api: MockApi): ItemRepository {
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { ItemPagingSource(api) }
+        )
+    }
+
+    override fun searchItems(query: String): Pager<Int, Item> {
+        return Pager(
+            config = PagingConfig(pageSize = 10),
+            pagingSourceFactory = { SearchItemPagingSource(api, query) }
         )
     }
 }

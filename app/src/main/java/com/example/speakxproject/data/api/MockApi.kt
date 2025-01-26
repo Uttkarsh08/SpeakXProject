@@ -6,23 +6,13 @@ import kotlinx.coroutines.delay
 
 class MockApi {
 
-    private val MAX_ID = 200
-    private val MIN_ID = 0
+    private val MAX_ID = 2000
+    suspend fun fetchItems(id: Int): ApiResponse{
+        delay(1200)
 
-    suspend fun fetchItems(id: Int, direction: String): ApiResponse{
-        delay(2000)
+        val items = generateItems(id)
 
-        val items = when (direction) {
-            "up" -> generateUpwardItems(id)
-            "down" -> generateDownwardItems(id)
-            else -> emptyList()
-        }
-
-        val hasMore = when (direction) {
-            "up" -> items.isNotEmpty() && items.first().id!! > MIN_ID
-            "down" -> items.isNotEmpty() && items.last().id!! < MAX_ID
-            else -> false
-        }
+        val hasMore = items.isNotEmpty() && items.last().id < MAX_ID
 
         return ApiResponse(
             data = items,
@@ -30,11 +20,22 @@ class MockApi {
         )
     }
 
-    private fun generateUpwardItems(id: Int): List<Item> {
-        return List(10) { Item(id = id - it, title = "Item ${id - it}") }
-    }
 
-    private fun generateDownwardItems(id: Int): List<Item> {
+    private fun generateItems(id: Int): List<Item> {
         return List(10) { Item(id = id + it, title = "Item ${id + it}") }
     }
+
+    suspend fun searchItems(id: Int, query: String): ApiResponse {
+        delay(800)
+
+        val all = (1..MAX_ID).map { Item(it, "Item $it") }
+        val filteredItems = all.filter { it.title.contains(query, ignoreCase = true) }
+
+        val items = filteredItems.filter { it.id> id }.take(10)
+
+        val hasMore = items.isNotEmpty()
+
+        return ApiResponse(items, hasMore)
+    }
+
 }

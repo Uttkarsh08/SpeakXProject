@@ -1,5 +1,6 @@
 package com.example.twowaypagination.data.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.speakxproject.data.api.MockApi
@@ -15,15 +16,16 @@ class ItemPagingSource(
 
         return try {
 
-            val id = params.key?: 100
-            val direction = if(params.loadSize > 0) "down" else "up"
+            val id = params.key?: 1
 
-            val response: ApiResponse = api.fetchItems(id, direction)
+            val response: ApiResponse = api.fetchItems(id)
             val items = response.data
             val hasMore = response.hasMore
 
             val nextKey = if (hasMore) id+10 else null
-            val prevKey = if (direction == "up" && id >0) id-10 else null
+            val prevKey = if (id >1) id-10 else null
+
+            Log.d("SearchPagingSource", "Fetched items: ${items.size}, NextKey: ${items.lastOrNull()?.id}, PrevKey: ${items.firstOrNull()?.id}")
 
             LoadResult.Page(
                 data = items,

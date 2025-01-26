@@ -9,4 +9,5 @@ sealed class ItemState {
     class Success(val data: Flow<PagingData<Item>>) : ItemState()
     class Error(val message: String) : ItemState()
     class Loading() : ItemState()
+    object Searching : ItemState()
 }

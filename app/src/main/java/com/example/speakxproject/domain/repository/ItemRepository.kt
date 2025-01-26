@@ -6,4 +6,6 @@ import com.example.speakxproject.data.model.Item
 interface ItemRepository {
 
     fun getItemsPager(): Pager<Int, Item>
+
+    fun searchItems(query: String): Pager<Int, Item>
 }
